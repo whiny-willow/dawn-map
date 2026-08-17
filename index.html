@@ -2,9 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Interactive map — by W.Willow</title>
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0b0a09">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
 </head>
 <body>
@@ -12,22 +10,22 @@
 <helmet>
 <style>
   @font-face { font-family: 'Create Your Mark'; src: url('assets/CreateYourMark.otf') format('opentype'); font-display: swap; }
-  @font-face { font-family: 'Wild Words'; src: url('assets/WildWords.otf') format('opentype'); font-display: swap; }
-  html { margin: 0; padding: 0; background: #0b0a09; }
-  body { margin: 0; padding: 0; background: #0b0a09; overflow-x: hidden; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior-y: contain; }
+  html { margin: 0; padding: 0; background: #0b0a09; width: 100%; }
+  body { margin: 0; padding: 0; background: #0b0a09; width: 100%; min-height: 100dvh; overflow-x: hidden; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior-y: contain; }
   * { -webkit-tap-highlight-color: transparent; }
   a { color: #d8c7a4; text-decoration: none; }
   a:hover { color: #fff; }
-  @keyframes blink { 0%, 49% { opacity: 1 } 50%, 100% { opacity: 0 } }
   @keyframes rotatehint { 0%, 20% { transform: rotate(0deg) } 55%, 100% { transform: rotate(-90deg) } }
   @keyframes pulsering { 0% { transform: scale(1); opacity: .85 } 70% { transform: scale(1.45); opacity: 0 } 100% { transform: scale(1.45); opacity: 0 } }
   @keyframes smokedriftA { 0% { transform: translate3d(-6%, 3%, 0) scale(1.15) } 50% { transform: translate3d(4%, -4%, 0) scale(1.32) } 100% { transform: translate3d(-6%, 3%, 0) scale(1.15) } }
   @keyframes smokedriftB { 0% { transform: translate3d(5%, -2%, 0) scale(1.28) rotate(0deg) } 50% { transform: translate3d(-5%, 4%, 0) scale(1.12) rotate(4deg) } 100% { transform: translate3d(5%, -2%, 0) scale(1.28) rotate(0deg) } }
   @keyframes fadeup { from { opacity: 0; transform: translateY(14px) } to { opacity: 1; transform: translateY(0) } }
+  @keyframes stepin { 0% { opacity: 0; transform: scale(.35) } 60% { opacity: 1; transform: scale(1.22) } 100% { opacity: 1; transform: scale(1) } }
+  @keyframes markin { from { opacity: 0 } to { opacity: 1; pointer-events: auto } }
 </style>
 </helmet>
 
-<div style="position: relative; width: 100%; display: flex; flex-direction: column; background: #0b0a09; font-family: 'Create Your Mark', 'Rock Salt', cursive; color: #f2ece0; overflow-x: hidden; touch-action: manipulation;">
+<div style="position: relative; width: 100%; min-height: 100dvh; display: flex; flex-direction: column; background: #0b0a09; font-family: 'Create Your Mark', 'Rock Salt', cursive; color: #f2ece0; overflow-x: hidden; touch-action: manipulation;">
 
   <sc-if value="{{ isIntro }}" hint-placeholder-val="{{ true }}">
     <div style="position: relative; width: 100%; aspect-ratio: 16 / 9; min-height: 56.25vw; background: linear-gradient(180deg, #0d1b23 0%, #12303c 45%, #0a1a22 100%);">
@@ -47,16 +45,16 @@
         </div>
       </div>
       <div style="position: absolute; left: 0; right: 0; bottom: 4%; display: flex; justify-content: center;">
-        <img src="assets/logo.webp" alt="by W.Willow" style="height: clamp(20px, 3.1vw, 44px); width: auto; display: block; filter: drop-shadow(0 3px 16px rgba(0,0,0,.75));">
+        <img src="assets/logo.webp" alt="by W.Willow" decoding="async" style="height: clamp(20px, 3.1vw, 44px); width: auto; display: block; filter: drop-shadow(0 3px 16px rgba(0,0,0,.75));">
       </div>
     </div>
   </sc-if>
 
-  <sc-if value="{{ isMap }}" hint-placeholder-val="{{ false }}">
+  <sc-if value="{{ isMap1 }}" hint-placeholder-val="{{ false }}">
     <div style="position: relative; width: 100%; background: #17120c;">
       <div style="position: relative; width: 100%; aspect-ratio: 2560 / 1440;">
         <img src="assets/map.webp" alt="Travel route map" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; display: block;">
-        <div onClick="{{ openSlide }}" role="button" title="Odiha" style="position: absolute; left: 53.2%; top: 49.6%; width: 5.4%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; cursor: pointer;">
+        <div onClick="{{ openOdiha }}" role="button" title="Odiha" style="position: absolute; left: 53.2%; top: 49.6%; width: 5.4%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; cursor: pointer;">
           <span style="position: absolute; inset: 0; border-radius: 50%; border: 2px solid rgba(190,40,32,.85); animation: pulsering 2.4s ease-out infinite;"></span>
         </div>
       </div>
@@ -64,10 +62,64 @@
     </div>
   </sc-if>
 
-  <sc-if value="{{ isSlide }}" hint-placeholder-val="{{ false }}">
+  <sc-if value="{{ isMap2 }}" hint-placeholder-val="{{ false }}">
+    <div style="position: relative; width: 100%; background: #17120c;">
+      <div style="position: relative; width: 100%; aspect-ratio: 2560 / 1440;">
+        <img src="assets/map.webp" alt="Travel route map" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; display: block;">
+
+        <div style="position: absolute; left: 52.656%; top: 48.111%; width: 0.719%; height: 1.111%; background-image: url('assets/way-ch2.webp'); background-size: 13913.04% 9000.00%; background-position: 53.037% 48.652%; background-repeat: no-repeat; opacity: 0; animation: stepin 340ms ease-out 1000ms forwards; pointer-events: none;"></div>
+        <div style="position: absolute; left: 53.125%; top: 48.778%; width: 0.688%; height: 1.167%; background-image: url('assets/way-ch2.webp'); background-size: 14545.45% 8571.43%; background-position: 53.493% 49.354%; background-repeat: no-repeat; opacity: 0; animation: stepin 340ms ease-out 1200ms forwards; pointer-events: none;"></div>
+        <div style="position: absolute; left: 53.563%; top: 49.722%; width: 0.656%; height: 1.222%; background-image: url('assets/way-ch2.webp'); background-size: 15238.10% 8181.82%; background-position: 53.916% 50.337%; background-repeat: no-repeat; opacity: 0; animation: stepin 340ms ease-out 1400ms forwards; pointer-events: none;"></div>
+        <div style="position: absolute; left: 53.938%; top: 50.722%; width: 0.656%; height: 1.278%; background-image: url('assets/way-ch2.webp'); background-size: 15238.10% 7826.09%; background-position: 54.294% 51.379%; background-repeat: no-repeat; opacity: 0; animation: stepin 340ms ease-out 1600ms forwards; pointer-events: none;"></div>
+        <div style="position: absolute; left: 54.250%; top: 51.833%; width: 0.656%; height: 1.278%; background-image: url('assets/way-ch2.webp'); background-size: 15238.10% 7826.09%; background-position: 54.608% 52.504%; background-repeat: no-repeat; opacity: 0; animation: stepin 340ms ease-out 1800ms forwards; pointer-events: none;"></div>
+        <div style="position: absolute; left: 54.563%; top: 52.944%; width: 0.656%; height: 1.278%; background-image: url('assets/way-ch2.webp'); background-size: 15238.10% 7826.09%; background-position: 54.923% 53.630%; background-repeat: no-repeat; opacity: 0; animation: stepin 340ms ease-out 2000ms forwards; pointer-events: none;"></div>
+        <div style="position: absolute; left: 54.844%; top: 54.000%; width: 0.656%; height: 1.278%; background-image: url('assets/way-ch2.webp'); background-size: 15238.10% 7826.09%; background-position: 55.206% 54.699%; background-repeat: no-repeat; opacity: 0; animation: stepin 340ms ease-out 2200ms forwards; pointer-events: none;"></div>
+        <div style="position: absolute; left: 55.031%; top: 55.222%; width: 0.656%; height: 1.278%; background-image: url('assets/way-ch2.webp'); background-size: 15238.10% 7826.09%; background-position: 55.395% 55.937%; background-repeat: no-repeat; opacity: 0; animation: stepin 340ms ease-out 2400ms forwards; pointer-events: none;"></div>
+        <div style="position: absolute; left: 55.156%; top: 56.444%; width: 0.625%; height: 1.278%; background-image: url('assets/way-ch2.webp'); background-size: 16000.00% 7826.09%; background-position: 55.503% 57.175%; background-repeat: no-repeat; opacity: 0; animation: stepin 340ms ease-out 2600ms forwards; pointer-events: none;"></div>
+
+        <div onClick="{{ openSafir }}" role="button" title="Safir" style="position: absolute; left: 55.4%; top: 57.8%; width: 2.6%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; cursor: pointer; opacity: 0; pointer-events: none; animation: markin 600ms ease 2950ms forwards;">
+          <span style="position: absolute; inset: -14%; border-radius: 50%; border: 2px solid rgba(190,40,32,.9); animation: pulsering 2.4s ease-out infinite;"></span>
+        </div>
+
+        <div style="position: absolute; left: 54.594%; top: 57.611%; width: 0.656%; height: 1.222%; background-image: url('assets/way-ch2.webp'); background-size: 15238.10% 8181.82%; background-position: 54.954% 58.324%; background-repeat: no-repeat; opacity: 0; animation: stepin 340ms ease-out 3400ms forwards; pointer-events: none;"></div>
+        <div style="position: absolute; left: 53.969%; top: 57.389%; width: 0.688%; height: 1.056%; background-image: url('assets/way-ch2.webp'); background-size: 14545.45% 9473.68%; background-position: 54.342% 58.001%; background-repeat: no-repeat; opacity: 0; animation: stepin 340ms ease-out 3600ms forwards; pointer-events: none;"></div>
+        <div style="position: absolute; left: 53.281%; top: 57.056%; width: 0.688%; height: 1.111%; background-image: url('assets/way-ch2.webp'); background-size: 14545.45% 9000.00%; background-position: 53.650% 57.697%; background-repeat: no-repeat; opacity: 0; animation: stepin 340ms ease-out 3800ms forwards; pointer-events: none;"></div>
+        <div style="position: absolute; left: 52.594%; top: 57.111%; width: 0.719%; height: 1.167%; background-image: url('assets/way-ch2.webp'); background-size: 13913.04% 8571.43%; background-position: 52.975% 57.785%; background-repeat: no-repeat; opacity: 0; animation: stepin 340ms ease-out 4000ms forwards; pointer-events: none;"></div>
+
+        <div onClick="{{ openHayran }}" role="button" title="Hayran" style="position: absolute; left: 52.4%; top: 57.8%; width: 2.6%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; cursor: pointer; opacity: 0; pointer-events: none; animation: markin 600ms ease 4350ms forwards;">
+          <span style="position: absolute; inset: -14%; border-radius: 50%; border: 2px solid rgba(190,40,32,.9); animation: pulsering 2.4s ease-out infinite;"></span>
+        </div>
+
+        <div onClick="{{ openOdiha }}" role="button" title="Odiha" style="position: absolute; left: 52.9%; top: 48.4%; width: 3.2%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; cursor: pointer;"></div>
+      </div>
+      <div style="position: fixed; inset: 0; pointer-events: none; z-index: 3; background: radial-gradient(105% 88% at 50% 50%, rgba(0,0,0,0) 30%, rgba(0,0,0,.22) 58%, rgba(0,0,0,.5) 80%, rgba(0,0,0,.82) 100%);"></div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isMap }}" hint-placeholder-val="{{ false }}">
+    <div style="position: fixed; left: 50%; transform: translateX(-50%); top: max(2.2vh, 10px); z-index: 8; display: flex; align-items: flex-start; font-family: system-ui, -apple-system, 'Helvetica Neue', sans-serif; font-size: clamp(11px, 1.15vw, 16px); letter-spacing: 0.06em; white-space: nowrap; filter: drop-shadow(0 2px 10px rgba(0,0,0,.65));">
+      <span style="width: clamp(16px, 2.2vw, 34px); height: 1px; margin-top: 0.72em; background: rgba(242,236,224,.4);"></span>
+      <div onClick="{{ goCh1 }}" role="button" style="display: flex; flex-direction: column; align-items: center; gap: 0.5em; cursor: pointer; opacity: {{ ch1Dim }}; transition: opacity 250ms ease;" style-hover="opacity: 1;">
+        <span style="width: 1.45em; height: 1.45em; display: flex; align-items: center; justify-content: center; border-radius: 999px; border: 1px solid {{ ch1Frame }};">
+          <span style="width: 0.5em; height: 0.5em; border-radius: 999px; background: #f2ece0;"></span>
+        </span>
+        <span style="color: #f2ece0;">Глава 1</span>
+      </div>
+      <span style="width: clamp(40px, 6vw, 96px); height: 1px; margin-top: 0.72em; background: rgba(242,236,224,.4);"></span>
+      <div onClick="{{ goCh2 }}" role="button" style="display: flex; flex-direction: column; align-items: center; gap: 0.5em; cursor: pointer; opacity: {{ ch2Dim }}; transition: opacity 250ms ease;" style-hover="opacity: 1;">
+        <span style="width: 1.45em; height: 1.45em; display: flex; align-items: center; justify-content: center; border-radius: 999px; border: 1px solid {{ ch2Frame }};">
+          <span style="width: 0.5em; height: 0.5em; border-radius: 999px; background: #f2ece0;"></span>
+        </span>
+        <span style="color: #f2ece0;">Глава 2</span>
+      </div>
+      <span style="width: clamp(16px, 2.2vw, 34px); height: 1px; margin-top: 0.72em; background: rgba(242,236,224,.4);"></span>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isOdiha }}" hint-placeholder-val="{{ false }}">
     <div style="position: relative; width: 100%; background-color: #150c05; background-image: url('assets/table.png'); background-size: cover; background-position: center;">
       <div style="position: relative; width: 100%; aspect-ratio: 2560 / 1440; animation: fadeup .7s ease both;">
-        <img src="assets/slide-ch1.webp" alt="Odiha, chapter one" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; display: block;">
+        <img src="assets/slide-ch1.webp" alt="Odiha, chapter one" decoding="async" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; display: block;">
         <div style="position: absolute; left: 55.0%; top: 82.5%; width: 37.5%; height: 9.5%; pointer-events: none; background: radial-gradient(ellipse at 50% 0%, rgba(0,0,0,.62), rgba(0,0,0,0) 74%); filter: blur(9px);"></div>
         <div style="position: absolute; left: 47.4%; top: 45.5%; width: 11.6%; height: 6.5%; pointer-events: none; background: radial-gradient(ellipse at 50% 0%, rgba(0,0,0,.55), rgba(0,0,0,0) 76%); filter: blur(7px);"></div>
         <div style="position: absolute; left: 57.2%; top: 43.0%; width: 10.8%; height: 6.5%; pointer-events: none; background: radial-gradient(ellipse at 50% 0%, rgba(0,0,0,.55), rgba(0,0,0,0) 76%); filter: blur(7px);"></div>
@@ -79,30 +131,72 @@
         <div onClick="{{ zoomP3 }}" role="button" style="position: absolute; left: 67.3%; top: 14.2%; width: 12.8%; height: 38.6%; cursor: pointer; border-radius: 4px;"></div>
         <div onClick="{{ zoomOdiha }}" role="button" style="position: absolute; left: 3.5%; top: 1.7%; width: 43.4%; height: 96.9%; cursor: pointer; border-radius: 6px;"></div>
       </div>
-      <div style="position: fixed; left: 2.2vw; top: max(2.6vh, 12px); display: flex; align-items: center; gap: 0.7em; z-index: 5;">
-        <div onClick="{{ backToMap }}" role="button" style="display: flex; align-items: center; gap: 0.45em; padding: 0.55em 1.15em; border: 1px solid rgba(242,236,224,.35); border-radius: 999px; background: rgba(8,7,6,.55); backdrop-filter: blur(6px); font-family: system-ui, -apple-system, 'Helvetica Neue', sans-serif; font-size: clamp(13px, 1.35vw, 20px); letter-spacing: 0.05em; line-height: 1.2; cursor: pointer;" style-hover="border-color: rgba(242,236,224,.85); background: rgba(8,7,6,.8);">
-          <span style="font-size: 1em; line-height: 1;">←</span>
-          <span>К карте</span>
-        </div>
-        <div onClick="{{ toggleHint }}" role="button" title="Подсказка" style="width: 2.5em; height: 2.5em; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(242,236,224,.35); border-radius: 999px; background: rgba(8,7,6,.55); backdrop-filter: blur(6px); font-family: system-ui, -apple-system, 'Helvetica Neue', sans-serif; font-size: clamp(13px, 1.35vw, 20px); line-height: 1; cursor: pointer;" style-hover="border-color: rgba(242,236,224,.85); background: rgba(8,7,6,.8);">?</div>
-      </div>
-      <sc-if value="{{ hintOpen }}" hint-placeholder-val="{{ false }}">
-        <div style="position: fixed; left: 2.2vw; top: max(11vh, 62px); z-index: 6; display: flex; align-items: flex-start; gap: 1em; max-width: min(78vw, 26em); padding: 0.9em 1.1em; border: 1px solid rgba(242,236,224,.35); border-radius: 14px; background: rgba(8,7,6,.78); backdrop-filter: blur(8px); font-family: system-ui, -apple-system, 'Helvetica Neue', sans-serif; font-size: clamp(13px, 1.35vw, 20px); letter-spacing: 0.03em; line-height: 1.45; animation: fadeup .3s ease both;">
-          <span>Материалы кликабельны</span>
-          <div onClick="{{ closeHint }}" role="button" style="flex: none; width: 1.5em; height: 1.5em; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(242,236,224,.4); border-radius: 999px; font-family: system-ui, sans-serif; font-size: .72em; cursor: pointer;" style-hover="border-color: #fff;">✕</div>
-        </div>
-      </sc-if>
     </div>
   </sc-if>
 
-  <sc-if value="{{ hasZoom }}" hint-placeholder-val="{{ false }}">
-    <div onClick="{{ closeZoom }}" style="position: fixed; inset: 0; z-index: 40; background: rgba(6,5,4,.9); overflow: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; text-align: center; cursor: zoom-out; animation: fadeup .35s ease both;">
-      <img onClick="{{ cycleZoom }}" src="{{ zoomSrc }}" alt="Материал" style="display: block; margin: auto; max-width: {{ zoomMaxW }}; max-height: {{ zoomMaxH }}; height: {{ zoomH }}; width: {{ zoomW }}; cursor: zoom-in; filter: drop-shadow(0 30px 70px rgba(0,0,0,.8));">
-      <div onClick="{{ closeZoom }}" role="button" style="position: fixed; right: 2.4vw; top: 2.6vh; width: 2.8em; height: 2.8em; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(242,236,224,.45); border-radius: 999px; background: rgba(8,7,6,.6); backdrop-filter: blur(6px); font-family: system-ui, sans-serif; font-size: clamp(13px, 1.35vw, 20px); cursor: pointer; z-index: 2;" style-hover="border-color: #fff;">✕</div>
-      <sc-if value="{{ canZoomMore }}" hint-placeholder-val="{{ true }}">
-      <div onClick="{{ cycleZoom }}" role="button" style="position: fixed; left: 50%; transform: translateX(-50%); bottom: max(2.4vh, 14px); display: flex; align-items: center; gap: 0.6em; padding: 0.55em 1.15em; border: 1px solid rgba(242,236,224,.35); border-radius: 999px; background: rgba(8,7,6,.62); backdrop-filter: blur(6px); font-family: system-ui, -apple-system, 'Helvetica Neue', sans-serif; font-size: clamp(13px, 1.35vw, 20px); letter-spacing: 0.03em; cursor: pointer; z-index: 2;" style-hover="border-color: rgba(242,236,224,.85);">
-        <span>Увеличить</span>
+  <sc-if value="{{ isSafir }}" hint-placeholder-val="{{ false }}">
+    <div style="position: relative; width: 100%; background-color: #150c05; background-image: url('assets/table.png'); background-size: cover; background-position: center;">
+      <div style="position: relative; width: 100%; aspect-ratio: 2560 / 1440; animation: fadeup .7s ease both;">
+        <img src="assets/slide-safir.webp" alt="Safir, chapter two" decoding="async" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; display: block;">
+        <div style="position: absolute; left: 6.0%; top: 95.0%; width: 42.0%; height: 8.0%; pointer-events: none; background: radial-gradient(ellipse at 50% 0%, rgba(0,0,0,.58), rgba(0,0,0,0) 76%); filter: blur(11px);"></div>
+        <div style="position: absolute; left: 50.5%; top: 39.0%; width: 22.0%; height: 7.0%; pointer-events: none; background: radial-gradient(ellipse at 50% 0%, rgba(0,0,0,.5), rgba(0,0,0,0) 76%); filter: blur(9px);"></div>
+        <div style="position: absolute; left: 74.0%; top: 53.0%; width: 18.0%; height: 6.5%; pointer-events: none; background: radial-gradient(ellipse at 50% 0%, rgba(0,0,0,.5), rgba(0,0,0,0) 76%); filter: blur(9px);"></div>
+        <div style="position: absolute; left: 53.0%; top: 95.5%; width: 19.5%; height: 7.0%; pointer-events: none; background: radial-gradient(ellipse at 50% 0%, rgba(0,0,0,.5), rgba(0,0,0,0) 76%); filter: blur(9px);"></div>
+        <div onClick="{{ zoomSafir }}" role="button" style="position: absolute; left: 5.0%; top: 3.5%; width: 44.0%; height: 93.0%; cursor: pointer; border-radius: 6px;"></div>
+        <div onClick="{{ zoomSP3 }}" role="button" style="position: absolute; left: 49.5%; top: 0.5%; width: 23.5%; height: 40.5%; cursor: pointer; border-radius: 4px;"></div>
+        <div onClick="{{ zoomSP4 }}" role="button" style="position: absolute; left: 73.4%; top: 12.0%; width: 19.0%; height: 43.5%; cursor: pointer; border-radius: 4px;"></div>
+        <div onClick="{{ zoomSP1 }}" role="button" style="position: absolute; left: 52.4%; top: 48.5%; width: 20.5%; height: 48.5%; cursor: pointer; border-radius: 4px;"></div>
+        <div onClick="{{ zoomSP2 }}" role="button" style="position: absolute; left: 73.2%; top: 57.8%; width: 19.6%; height: 40.5%; cursor: pointer; border-radius: 4px;"></div>
       </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isHayran }}" hint-placeholder-val="{{ false }}">
+    <div style="position: relative; width: 100%; background-color: #150c05; background-image: url('assets/table.png'); background-size: cover; background-position: center;">
+      <div style="position: relative; width: 100%; aspect-ratio: 2560 / 1440; animation: fadeup .7s ease both;">
+        <img src="assets/slide-hayran.webp" alt="Hayran, chapter two" decoding="async" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; display: block;">
+        <div onClick="{{ zoomHGuide }}" role="button" style="position: absolute; left: 53.0%; top: 0%; width: 47.0%; height: 100%; cursor: pointer;"></div>
+        <div onClick="{{ zoomHMenu }}" role="button" style="position: absolute; left: 1.5%; top: 46.5%; width: 18.0%; height: 26.0%; cursor: pointer; border-radius: 4px;"></div>
+        <div onClick="{{ zoomHP1 }}" role="button" style="position: absolute; left: 14.0%; top: 0.5%; width: 15.5%; height: 29.5%; cursor: pointer; border-radius: 4px;"></div>
+        <div onClick="{{ zoomHP2 }}" role="button" style="position: absolute; left: 35.0%; top: 0%; width: 22.0%; height: 27.5%; cursor: pointer; border-radius: 4px;"></div>
+        <div onClick="{{ zoomHP3 }}" role="button" style="position: absolute; left: 14.5%; top: 30.0%; width: 16.5%; height: 23.5%; cursor: pointer; border-radius: 4px;"></div>
+        <div onClick="{{ zoomHP4 }}" role="button" style="position: absolute; left: 33.0%; top: 27.5%; width: 20.5%; height: 27.5%; cursor: pointer; border-radius: 4px;"></div>
+        <div onClick="{{ zoomHP5 }}" role="button" style="position: absolute; left: 20.0%; top: 55.0%; width: 17.0%; height: 30.0%; cursor: pointer; border-radius: 4px;"></div>
+        <div onClick="{{ zoomHP6 }}" role="button" style="position: absolute; left: 36.5%; top: 57.0%; width: 21.5%; height: 36.0%; cursor: pointer; border-radius: 4px;"></div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isSlide }}" hint-placeholder-val="{{ false }}">
+    <div style="position: fixed; left: 2.2vw; top: max(2.6vh, 12px); display: flex; align-items: center; gap: 0.7em; z-index: 5;">
+      <div onClick="{{ backToMap }}" role="button" style="display: flex; align-items: center; gap: 0.45em; padding: 0.55em 1.15em; border: 1px solid rgba(242,236,224,.35); border-radius: 999px; background: rgba(8,7,6,.55); backdrop-filter: blur(6px); font-family: system-ui, -apple-system, 'Helvetica Neue', sans-serif; font-size: clamp(13px, 1.35vw, 20px); letter-spacing: 0.05em; line-height: 1.2; cursor: pointer;" style-hover="border-color: rgba(242,236,224,.85); background: rgba(8,7,6,.8);">
+        <span style="font-size: 1em; line-height: 1;">←</span>
+        <span>К карте</span>
+      </div>
+      <div onClick="{{ toggleHint }}" role="button" title="Подсказка" style="width: 2.5em; height: 2.5em; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(242,236,224,.35); border-radius: 999px; background: rgba(8,7,6,.55); backdrop-filter: blur(6px); font-family: system-ui, -apple-system, 'Helvetica Neue', sans-serif; font-size: clamp(13px, 1.35vw, 20px); line-height: 1; cursor: pointer;" style-hover="border-color: rgba(242,236,224,.85); background: rgba(8,7,6,.8);">?</div>
+    </div>
+    <sc-if value="{{ hintOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="position: fixed; left: 2.2vw; top: max(11vh, 62px); z-index: 6; display: flex; align-items: flex-start; gap: 1em; max-width: min(78vw, 26em); padding: 0.9em 1.1em; border: 1px solid rgba(242,236,224,.35); border-radius: 14px; background: rgba(8,7,6,.78); backdrop-filter: blur(8px); font-family: system-ui, -apple-system, 'Helvetica Neue', sans-serif; font-size: clamp(13px, 1.35vw, 20px); letter-spacing: 0.03em; line-height: 1.45; animation: fadeup .3s ease both;">
+        <span>Материалы кликабельны</span>
+        <div onClick="{{ closeHint }}" role="button" style="flex: none; width: 1.5em; height: 1.5em; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(242,236,224,.4); border-radius: 999px; font-family: system-ui, sans-serif; font-size: .72em; cursor: pointer;" style-hover="border-color: #fff;">✕</div>
+      </div>
+    </sc-if>
+  </sc-if>
+
+  <sc-if value="{{ hasZoom }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeZoom }}" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; z-index: 40; background: rgba(6,5,4,.9); overflow: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; display: flex; align-items: safe center; justify-content: safe center; gap: 0.5em; min-height: 100dvh; cursor: zoom-out; animation: fadeup .35s ease both;">
+      <sc-if value="{{ hasCarousel }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ prevZoom }}" role="button" title="Предыдущее" style="flex: none; width: 2.6em; height: 2.6em; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(242,236,224,.4); border-radius: 999px; background: rgba(8,7,6,.6); backdrop-filter: blur(6px); font-family: system-ui, sans-serif; font-size: clamp(15px, 1.5vw, 22px); cursor: pointer;" style-hover="border-color: #fff; background: rgba(8,7,6,.85);">‹</div>
+      </sc-if>
+      <img onClick="{{ cycleZoom }}" src="{{ zoomSrc }}" alt="Материал" decoding="async" style="display: block; flex: none; margin-top: auto; margin-bottom: auto; max-width: {{ zoomMaxW }}; max-height: {{ zoomMaxH }}; height: {{ zoomH }}; width: auto; cursor: zoom-in; filter: drop-shadow(0 30px 70px rgba(0,0,0,.8));">
+      <sc-if value="{{ hasCarousel }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ nextZoom }}" role="button" title="Следующее" style="flex: none; width: 2.6em; height: 2.6em; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(242,236,224,.4); border-radius: 999px; background: rgba(8,7,6,.6); backdrop-filter: blur(6px); font-family: system-ui, sans-serif; font-size: clamp(15px, 1.5vw, 22px); cursor: pointer;" style-hover="border-color: #fff; background: rgba(8,7,6,.85);">›</div>
+      </sc-if>
+      <div onClick="{{ closeZoom }}" role="button" style="position: fixed; right: 2.4vw; top: 2.6vh; width: 2.8em; height: 2.8em; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(242,236,224,.45); border-radius: 999px; background: rgba(8,7,6,.6); backdrop-filter: blur(6px); font-family: system-ui, sans-serif; font-size: clamp(13px, 1.35vw, 20px); cursor: pointer; z-index: 2;" style-hover="border-color: #fff;">✕</div>
+      <sc-if value="{{ canZoomMore }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ cycleZoom }}" role="button" style="position: fixed; left: 50%; transform: translateX(-50%); bottom: max(2.4vh, 14px); display: flex; align-items: center; gap: 0.6em; padding: 0.55em 1.15em; border: 1px solid rgba(242,236,224,.35); border-radius: 999px; background: rgba(8,7,6,.62); backdrop-filter: blur(6px); font-family: system-ui, -apple-system, 'Helvetica Neue', sans-serif; font-size: clamp(13px, 1.35vw, 20px); letter-spacing: 0.03em; cursor: pointer; z-index: 2;" style-hover="border-color: rgba(242,236,224,.85);">
+          <span>Увеличить</span>
+        </div>
       </sc-if>
     </div>
   </sc-if>
@@ -126,7 +220,7 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;}}">
 class Component extends DCLogic {
-  state = { screen: "intro", typed: "", haze: 0, zoom: null, zoomStep: 0, needsRotate: false, hintOpen: false, showPlay: false };
+  state = { screen: "intro", chapter: 2, typed: "", haze: 0, list: null, idx: 0, zoomStep: 0, needsRotate: false, hintOpen: false, showPlay: false };
 
   componentDidMount() {
     this.title = "Interactive\nmap";
@@ -173,23 +267,44 @@ class Component extends DCLogic {
       this.kickVideo();
       const stalled = v.readyState < 2 || v.paused || v.currentTime === 0;
       if (!stalled) this.startTyping();
-      if (v.networkState === 3 || (v.error && v.error.code)) this.tryBlob();
-      if (stalled && !this.state.showPlay && Date.now() - this.mountedAt > 2600) this.setState({ showPlay: true });
+      if (v.error && v.error.code) this.tryBlob();
+      if (stalled && !this.state.showPlay && Date.now() - this.mountedAt > 5000) this.setState({ showPlay: true });
       if (!stalled && this.state.showPlay) this.setState({ showPlay: false });
     };
     this.mountedAt = Date.now();
+    // печать начинается по факту воспроизведения; длинный запас — чтобы экран не остался пустым
+    const v0 = this.videoEl();
+    if (v0) {
+      v0.addEventListener("playing", this.startTyping);
+    }
+    setTimeout(this.startTyping, 12000);
     this.vidTimer = setInterval(this.watchVideo, 900);
     this.kickVideo();
     this.checkOrient = () => {
       const w = window.innerWidth, h = window.innerHeight;
-      const coarse = window.matchMedia("(any-pointer: coarse)").matches && !window.matchMedia("(any-hover: hover)").matches;
-      const handheld = coarse && (navigator.maxTouchPoints || 0) > 0 && Math.min(w, h) <= 1100;
-      this.setState({ needsRotate: handheld && h > w * 1.02 });
+      const touch = window.matchMedia("(any-pointer: coarse)").matches || (navigator.maxTouchPoints || 0) > 0;
+      // портрет определяем и по медиа-запросу, и по размерам: на iOS они обновляются с задержкой
+      const portraitMQ = window.matchMedia("(orientation: portrait)").matches;
+      const handheld = touch && Math.min(w, h) <= 1200;
+      const want = handheld && (portraitMQ || h > w);
+      if (want !== this.state.needsRotate) this.setState({ needsRotate: want });
     };
     this.checkOrient();
-    setTimeout(this.checkOrient, 400);
+    [120, 400, 900].forEach(ms => setTimeout(this.checkOrient, ms));
+    this.orientTimer = setInterval(this.checkOrient, 700);
     window.addEventListener("resize", this.checkOrient);
     window.addEventListener("orientationchange", this.checkOrient);
+    window.addEventListener("pageshow", this.checkOrient);
+    document.addEventListener("visibilitychange", this.checkOrient);
+    const mq = window.matchMedia("(orientation: portrait)");
+    if (mq.addEventListener) mq.addEventListener("change", this.checkOrient);
+    this.onKey = (e) => {
+      if (!this.state.list) return;
+      if (e.key === "ArrowRight") this.step(1);
+      if (e.key === "ArrowLeft") this.step(-1);
+      if (e.key === "Escape") this.setState({ list: null, idx: 0, zoomStep: 0 });
+    };
+    window.addEventListener("keydown", this.onKey);
   }
 
   componentWillUnmount() {
@@ -197,51 +312,96 @@ class Component extends DCLogic {
     clearTimeout(this.hintTimer);
     clearTimeout(this.timer);
     clearTimeout(this.hazeTimer);
+    clearInterval(this.orientTimer);
     window.removeEventListener("resize", this.checkOrient);
     window.removeEventListener("orientationchange", this.checkOrient);
+    window.removeEventListener("pageshow", this.checkOrient);
+    document.removeEventListener("visibilitychange", this.checkOrient);
+    window.removeEventListener("keydown", this.onKey);
   }
 
-  go(screen) {
+  step(d) {
+    const l = this.state.list;
+    if (!l || l.length < 2) return;
+    this.setState({ idx: (this.state.idx + d + l.length) % l.length, zoomStep: 0 });
+  }
+
+  go(screen, chapter) {
     if (this.state.haze) return;
-    this.setState({ haze: 1, zoom: null, hintOpen: false });
+    this.setState({ haze: 1, list: null, idx: 0, hintOpen: false });
     this.hazeTimer = setTimeout(() => {
       if (window.scrollTo) window.scrollTo(0, 0);
-      this.setState({ screen });
+      this.setState(chapter ? { screen, chapter } : { screen });
       this.hazeTimer = setTimeout(() => this.setState({ haze: 0 }), 60);
     }, 640);
   }
 
   renderVals() {
-    const zoom = (src) => () => { this.setState({ zoom: src, zoomStep: 0 }); if (window.scrollTo) window.scrollTo(0, 0); };
-    const steps = ["auto", "170dvh"];
+    const open = (list, idx) => () => { this.setState({ list, idx, zoomStep: 0 }); if (window.scrollTo) window.scrollTo(0, 0); };
+    const ch1 = ["assets/polaroid-1.png", "assets/polaroid-2.png", "assets/polaroid-3.png"];
+    const safir = ["assets/safir-p2.png", "assets/safir-p1.png", "assets/safir-p4.png", "assets/safir-p3.png"];
+    const hayran = ["assets/hayran-p1.png", "assets/hayran-p2.png", "assets/hayran-p3.png", "assets/hayran-p4.png", "assets/hayran-p5.png", "assets/hayran-p6.png"];
+    const hguide = ["assets/hayran-1.png", "assets/hayran-2.png"];
+    const list = this.state.list;
+    const src = list ? list[this.state.idx] : "";
+    const isDoc = /odiha|safir\.png|hayran-1|hayran-2|hayran-menu/.test(src);
+    const s = this.state.screen;
     return {
       yes: true,
-      isIntro: this.state.screen === "intro",
-      isMap: this.state.screen === "map",
-      isSlide: this.state.screen === "slide",
+      isIntro: s === "intro",
+      isMap: s === "map",
+      isMap1: s === "map" && this.state.chapter === 1,
+      isMap2: s === "map" && this.state.chapter === 2,
+      isOdiha: s === "odiha",
+      isSafir: s === "safir",
+      isHayran: s === "hayran",
+      isSlide: s === "odiha" || s === "safir" || s === "hayran",
+      ch1Dim: this.state.chapter === 1 ? 1 : 0.55,
+      ch2Dim: this.state.chapter === 2 ? 1 : 0.55,
+      ch1Frame: this.state.chapter === 1 ? "rgba(242,236,224,.9)" : "transparent",
+      ch2Frame: this.state.chapter === 2 ? "rgba(242,236,224,.9)" : "transparent",
       typed: this.state.typed,
       haze: this.state.haze,
       needsRotate: this.state.needsRotate,
-      hasZoom: !!this.state.zoom,
-      zoomSrc: this.state.zoom || "",
+      hasZoom: !!list,
+      hasCarousel: !!list && list.length > 1,
+      zoomSrc: src,
       zoomH: this.state.zoomStep === 0 ? "auto" : "190dvh",
-      zoomW: "auto",
-      zoomMaxW: this.state.zoomStep === 0 ? "100vw" : "none",
+      zoomMaxW: this.state.zoomStep !== 0 ? "none" : (list && list.length > 1 ? "calc(100vw - 8.5em)" : "100vw"),
       zoomMaxH: this.state.zoomStep === 0 ? "100dvh" : "none",
-      canZoomMore: this.state.zoomStep === 0 && (this.state.zoom || "").indexOf("odiha") !== -1,
+      canZoomMore: this.state.zoomStep === 0 && isDoc,
       cycleZoom: (e) => {
         if (e && e.stopPropagation) e.stopPropagation();
-        if (this.state.zoomStep === 0) this.setState({ zoomStep: 1 });
+        if (isDoc && this.state.zoomStep === 0) this.setState({ zoomStep: 1 });
       },
+      prevZoom: (e) => { if (e && e.stopPropagation) e.stopPropagation(); this.step(-1); },
+      nextZoom: (e) => { if (e && e.stopPropagation) e.stopPropagation(); this.step(1); },
+      closeZoom: () => this.setState({ list: null, idx: 0, zoomStep: 0 }),
       enterMap: () => this.go("map"),
-      openSlide: () => this.go("slide"),
+      goCh1: () => { if (this.state.chapter !== 1) this.go("map", 1); },
+      goCh2: () => { if (this.state.chapter !== 2) this.go("map", 2); },
+      openOdiha: () => this.go("odiha"),
+      openSafir: () => this.go("safir"),
+      openHayran: () => this.go("hayran"),
       backToMap: () => this.go("map"),
-      zoomOdiha: zoom("assets/odiha.png"),
-      zoomTicket: zoom("assets/ticket.png"),
-      zoomP1: zoom("assets/polaroid-1.png"),
-      zoomP2: zoom("assets/polaroid-2.png"),
-      zoomP3: zoom("assets/polaroid-3.png"),
-      closeZoom: () => this.setState({ zoom: null, zoomStep: 0 }),
+      zoomOdiha: open(["assets/odiha.png"], 0),
+      zoomTicket: open(["assets/ticket.png"], 0),
+      zoomP1: open(ch1, 0),
+      zoomP2: open(ch1, 1),
+      zoomP3: open(ch1, 2),
+      zoomSafir: open(["assets/safir.png"], 0),
+      zoomSP3: open(safir, 0),
+      zoomSP4: open(safir, 1),
+      zoomSP1: open(safir, 2),
+      zoomSP2: open(safir, 3),
+      zoomHGuide: open(hguide, 0),
+      zoomHMenu: open(["assets/hayran-menu.png"], 0),
+      zoomHP1: open(hayran, 0),
+      zoomHP2: open(hayran, 1),
+      zoomHP3: open(hayran, 2),
+      zoomHP4: open(hayran, 3),
+      zoomHP5: open(hayran, 4),
+      zoomHP6: open(hayran, 5),
       hintOpen: this.state.hintOpen,
       showPlay: this.state.showPlay,
       startVideo: () => {
